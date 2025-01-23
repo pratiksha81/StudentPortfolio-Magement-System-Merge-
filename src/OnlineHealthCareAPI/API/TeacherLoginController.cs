@@ -1,5 +1,4 @@
-﻿using Application.Dto.Patient;
-using Application.Interfaces.Repositories.PatientRepository;
+﻿using Application.Dto.Teacher;
 using Application.Interfaces.Repositories.TeacherRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

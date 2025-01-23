@@ -1,8 +1,6 @@
 ﻿using Application.Dto.Teacher;
 using Application.Interfaces.Services.TeacherService;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Features.Teacher.Query
 {

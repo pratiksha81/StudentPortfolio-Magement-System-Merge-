@@ -1,8 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Http;
-
-namespace Application.Dto.UploadFile
+﻿namespace Application.Dto.UploadFile
 {
     public class UploadFileDto
     {

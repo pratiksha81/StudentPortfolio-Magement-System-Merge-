@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Dto.ECA
+﻿namespace Application.Dto.ECA
 {
     public class ExtracurricularActivitiesDto
     {
@@ -13,7 +7,6 @@ namespace Application.Dto.ECA
         public string Skill { get; set; }
         public int Year { get; set; }
         public string ClubName { get; set; }
-
         public string ImageUrl { get; set; }
     }
 }

@@ -18,16 +18,11 @@ namespace Infrastructure.Persistence.Contexts
             this._currentUserService = currentUserService;
         }
 
-        public DbSet<Patient> Patients { get; set; }
-        public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<HealthTest> HealthTests { get; set; }
-        public DbSet<MedicalHistory> MedicalHistory { get; set; }
         public DbSet<UploadFile> UploadFile { get; set; }
         public DbSet<UploadFileMorph> UploadFileMorph { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<CustomerMessage> CustomerMessages { get; set; }
         public DbSet<Certification> Certifications { get; set; }
-
         public DbSet<ExtracurricularActivities> ExtracurricularActivities { get; set; }
 
 

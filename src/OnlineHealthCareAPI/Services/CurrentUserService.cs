@@ -1,7 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Application.Interfaces.Services.CurrentUserService;
-using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace Services

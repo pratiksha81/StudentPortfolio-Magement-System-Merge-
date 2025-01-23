@@ -1,6 +1,5 @@
 using Application;
 using Application.Converters;
-using Domain.Entities;
 using Infrastructure;
 using Infrastructure.Persistence.Contexts;
 using kutumbaAPI;

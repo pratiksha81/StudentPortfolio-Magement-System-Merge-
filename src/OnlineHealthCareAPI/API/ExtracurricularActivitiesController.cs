@@ -1,6 +1,4 @@
 ﻿using API;
-using Application.Features.Certification.Command;
-using Application.Features.Certification.Query;
 using Application.Features.ExtracurricularActivities.Command;
 using Application.Features.ExtracurricularActivities.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +37,7 @@ namespace StudentPortfolio_Management_System.API
 
 
         [HttpPost("Create")]
-        public async Task<IActionResult> AddExtracurricularActivities([FromBody] AddExtracurricularActivitiesCommand command)
+        public async Task<IActionResult> AddExtracurricularActivities([FromForm] AddExtracurricularActivitiesCommand command)
         {
             try
             {

@@ -1,11 +1,6 @@
 ﻿using Application.Dto.Certification;
 using Application.Interfaces.Services.CertificationService;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.Certification.Command
 {

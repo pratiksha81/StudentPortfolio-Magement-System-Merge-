@@ -1,19 +1,17 @@
-﻿using Application.Interfaces.Repositories.AppointmentRepository;
-using Application.Interfaces.Repositories.CertificationRepository;
+﻿using Application.Interfaces.Repositories.CertificationRepository;
 using Infrastructure.Persistence.Contexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Infrastructure.Persistence.Repositories.CertificationRepository
+
+namespace Infrastructure.Persistence.Repositories.CertificationRepositorys
 {
     public class CertificationRepository : Repository<Certification>, ICertificationRepository
     {
-        public CertificationRepository(ApplicationDbContext context) : base(context)
+     //   private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _applicationDbContext;
+        public CertificationRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
-
+            this._applicationDbContext = dbContext;
         }
     }
+
 }

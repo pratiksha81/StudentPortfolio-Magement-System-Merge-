@@ -1,41 +1,29 @@
 ﻿using Application.Common.Interfaces;
 using Application.Exceptions;
-using Application.Interfaces.Repositories.AppointmentRepository;
 using Application.Interfaces.Repositories.CertificationRepository;
 using Application.Interfaces.Repositories.CustomerMessageRepository;
 using Application.Interfaces.Repositories.ExtracurricularActivitiesRepository;
-using Application.Interfaces.Repositories.HealthTestRepository;
-using Application.Interfaces.Repositories.PatientRepository;
 using Application.Interfaces.Repositories.TeacherRepository;
 using Application.Interfaces.Repositories.UploadFileMorphRepository;
 using Application.Interfaces.Repositories.UploadFileRepository;
-using Application.Interfaces.Services.AppointmentService;
 using Application.Interfaces.Services.CertificationService;
 using Application.Interfaces.Services.CustomerMessageService;
 using Application.Interfaces.Services.EmailSenderService;
 using Application.Interfaces.Services.ExtracurricularActivitiesService;
-using Application.Interfaces.Services.HealthTestService;
-using Application.Interfaces.Services.PatientService;
 using Application.Interfaces.Services.TeacherService;
 using Application.Interfaces.Services.UploadFileService;
 using Domain.Settings;
 using Infrastructure.Persistence.Contexts;
-using Infrastructure.Persistence.Repositories.AppointmentRepository;
-using Infrastructure.Persistence.Repositories.CertificationRepository;
+using Infrastructure.Persistence.Repositories.CertificationRepositorys;
 using Infrastructure.Persistence.Repositories.CustomerMessageRepository;
 using Infrastructure.Persistence.Repositories.ExtracurricularActivitiesRepository;
-using Infrastructure.Persistence.Repositories.HealthTestRepository;
-using Infrastructure.Persistence.Repositories.PatientRepository;
 using Infrastructure.Persistence.Repositories.TeacherRepository;
 using Infrastructure.Persistence.Repositories.UploadFileMorphRepository;
 using Infrastructure.Persistence.Repositories.UploadFileRepository;
-using Infrastructure.Persistence.Services.AppointmentService;
 using Infrastructure.Persistence.Services.CertificationService;
 using Infrastructure.Persistence.Services.CustomerMessageService;
 using Infrastructure.Persistence.Services.EmailSenderService;
-using Infrastructure.Persistence.Services.HealthTestService;
 using Infrastructure.Persistence.Services.IpHelperService;
-using Infrastructure.Persistence.Services.PatientService;
 using Infrastructure.Persistence.Services.TeacherService;
 using Infrastructure.Persistence.Services.UploadFileService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -59,7 +47,6 @@ namespace Infrastructure
                  options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                      builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-            
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
             services.AddScoped<ApplicationDbContextInitialiser>();
@@ -68,26 +55,18 @@ namespace Infrastructure
             services.AddAuthenticationConfigure(configuration);
             services.AddTransient<ICertificationService, CertificationService>();
             services.AddTransient<IIpHelperService, IpHelperService>();
-            services.AddTransient<IPatientService, PatientService>();
             services.AddTransient<IUploadFileService, UploadFileService>();
-            services.AddTransient<IAppointmentService, AppointmentService>();
             services.AddTransient<ITeacherService, TeacherService>();
             services.AddTransient<IExtracurricularActivitiesService, ExtracurricularActivitiesService>();
 
 
             services.AddTransient(typeof(Repository<>), typeof(Repository<>));
-            services.AddTransient<IPatientRepository, PatientRepository>();
+            services.AddTransient<ICertificationRepository, CertificationRepository>();
             services.AddTransient<IUploadFileRepository, UploadFileRepository>();
             services.AddTransient<IUploadFileMorphRepository, UploadFileMorphRepository>();
-            services.AddTransient<IAppointmentRepository, AppointmentRepository>();
             services.AddTransient<ITeacherRepository, TeacherRepository>();
-            services.AddTransient<ICertificationRepository, CertificationRepository>();
             services.AddTransient<IExtracurricularActivitiesRepository, ExtracurricularActivitiesRepository>();
-
-            //health Test
-            services.AddTransient<IHealthTestService, HealthTestService>();
-            services.AddTransient<IHealthTestRepository, HealthTestRepository>();
-
+           
 
             //custom Message
             services.AddTransient<ICustomerMessageService, CustomerMessageService>();

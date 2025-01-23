@@ -1,9 +1,6 @@
-﻿using Application.Dto.CustomerMessage;
-using Application.Features.CustomerMessage.Command;
+﻿using Application.Features.CustomerMessage.Command;
 using Application.Interfaces.Services.CustomerMessageService;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 namespace API
 {
     [ApiController]

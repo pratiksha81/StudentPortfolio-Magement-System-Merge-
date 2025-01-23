@@ -1,11 +1,6 @@
 ﻿using FluentValidation.Results;
 using FluentValidation;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Application.Wrapper;
 
 namespace Application.Behaviours

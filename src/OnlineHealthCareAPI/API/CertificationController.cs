@@ -1,10 +1,6 @@
 ﻿using API;
 using Application.Features.Certification.Command;
 using Application.Features.Certification.Query;
-using Application.Features.HealthTest.Command;
-using Application.Features.HealthTest.Query;
-using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StudentPortfolio_Management_System.API
