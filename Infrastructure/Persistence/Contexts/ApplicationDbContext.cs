@@ -3,6 +3,7 @@ using Application.Interfaces.Services.CurrentUserService;
 using Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Reflection.Emit;
 
 
 namespace Infrastructure.Persistence.Contexts
@@ -24,6 +25,8 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<CustomerMessage> CustomerMessages { get; set; }
         public DbSet<Certification> Certifications { get; set; }
         public DbSet<ExtracurricularActivities> ExtracurricularActivities { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Academics> Academics { get; set; }
 
 
 
@@ -72,7 +75,26 @@ namespace Infrastructure.Persistence.Contexts
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            builder.Entity<Student>()
+              .HasOne(s => s.Academics)
+              .WithOne(a => a.Student)
+              .HasForeignKey<Academics>(a => a.StudentId);
+
+            // Optional: Configuring cascade delete
+            builder.Entity<Academics>()
+                .HasOne(a => a.Student)
+                .WithOne(s => s.Academics)
+                .OnDelete(DeleteBehavior.Cascade);
             base.OnModelCreating(builder);
+
+            builder.Entity<Student>()
+        .HasMany(s => s.Certifications)
+        .WithOne(c => c.Student)
+        .HasForeignKey(c => c.StudentId) // This defines the foreign key
+        .OnDelete(DeleteBehavior.Cascade); // Optional cascade delete
+
+
+
         }
 
     }

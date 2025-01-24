@@ -1,29 +1,37 @@
 ﻿using Application.Common.Interfaces;
 using Application.Exceptions;
+using Application.Interfaces.Repositories.AcademicsRepository;
 using Application.Interfaces.Repositories.CertificationRepository;
 using Application.Interfaces.Repositories.CustomerMessageRepository;
 using Application.Interfaces.Repositories.ExtracurricularActivitiesRepository;
+using Application.Interfaces.Repositories.StudentRepository;
 using Application.Interfaces.Repositories.TeacherRepository;
 using Application.Interfaces.Repositories.UploadFileMorphRepository;
 using Application.Interfaces.Repositories.UploadFileRepository;
+using Application.Interfaces.Services.AcademicsService;
 using Application.Interfaces.Services.CertificationService;
 using Application.Interfaces.Services.CustomerMessageService;
 using Application.Interfaces.Services.EmailSenderService;
 using Application.Interfaces.Services.ExtracurricularActivitiesService;
+using Application.Interfaces.Services.StudentService;
 using Application.Interfaces.Services.TeacherService;
 using Application.Interfaces.Services.UploadFileService;
 using Domain.Settings;
 using Infrastructure.Persistence.Contexts;
+using Infrastructure.Persistence.Repositories.AcademicsRepository;
 using Infrastructure.Persistence.Repositories.CertificationRepositorys;
 using Infrastructure.Persistence.Repositories.CustomerMessageRepository;
 using Infrastructure.Persistence.Repositories.ExtracurricularActivitiesRepository;
+using Infrastructure.Persistence.Repositories.StudentRepository;
 using Infrastructure.Persistence.Repositories.TeacherRepository;
 using Infrastructure.Persistence.Repositories.UploadFileMorphRepository;
 using Infrastructure.Persistence.Repositories.UploadFileRepository;
+using Infrastructure.Persistence.Services.AcademicsService;
 using Infrastructure.Persistence.Services.CertificationService;
 using Infrastructure.Persistence.Services.CustomerMessageService;
 using Infrastructure.Persistence.Services.EmailSenderService;
 using Infrastructure.Persistence.Services.IpHelperService;
+using Infrastructure.Persistence.Services.StudentService;
 using Infrastructure.Persistence.Services.TeacherService;
 using Infrastructure.Persistence.Services.UploadFileService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -58,7 +66,8 @@ namespace Infrastructure
             services.AddTransient<IUploadFileService, UploadFileService>();
             services.AddTransient<ITeacherService, TeacherService>();
             services.AddTransient<IExtracurricularActivitiesService, ExtracurricularActivitiesService>();
-
+            services.AddTransient<IStudentService, StudentService>();
+            services.AddTransient<IAcademicsService, AcademicsService>();
 
             services.AddTransient(typeof(Repository<>), typeof(Repository<>));
             services.AddTransient<ICertificationRepository, CertificationRepository>();
@@ -66,7 +75,9 @@ namespace Infrastructure
             services.AddTransient<IUploadFileMorphRepository, UploadFileMorphRepository>();
             services.AddTransient<ITeacherRepository, TeacherRepository>();
             services.AddTransient<IExtracurricularActivitiesRepository, ExtracurricularActivitiesRepository>();
-           
+            services.AddTransient<IStudentRepository, StudentRepository>();
+            services.AddTransient<IAcademicsRepository, AcademicsRepository>();
+
 
             //custom Message
             services.AddTransient<ICustomerMessageService, CustomerMessageService>();

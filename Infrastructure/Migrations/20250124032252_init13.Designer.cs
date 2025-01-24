@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250116122242_init7")]
-    partial class init7
+    [Migration("20250124032252_init13")]
+    partial class init13
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Domain.Entities.Appointment", b =>
+            modelBuilder.Entity("Domain.Entities.Academics", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,37 +32,33 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("AppointmentDateTime")
+                    b.Property<DateTime>("Ended")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DoctorId")
+                    b.Property<double>("GPA")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("Joined")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Scholarship")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Section")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Semester")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<TimeSpan>("TimeEnd")
-                        .HasColumnType("time");
-
-                    b.Property<TimeSpan>("TimeStart")
-                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorId");
+                    b.HasIndex("StudentId")
+                        .IsUnique();
 
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("Appointments");
+                    b.ToTable("Academics");
                 });
 
             modelBuilder.Entity("Domain.Entities.Certification", b =>
@@ -79,10 +75,15 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ReceivedDate")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
 
                     b.ToTable("Certifications");
                 });
@@ -123,7 +124,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("CustomerMessages");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Doctor", b =>
+            modelBuilder.Entity("Domain.Entities.ExtracurricularActivities", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -131,54 +132,27 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
+                    b.Property<string>("ClubName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Specialty")
-                        .IsRequired()
+                    b.Property<string>("Position")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Skill")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Doctors");
+                    b.ToTable("ExtracurricularActivities");
                 });
 
-            modelBuilder.Entity("Domain.Entities.HealthTest", b =>
-                {
-                    b.Property<int>("HealthTestId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HealthTestId"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("RequestedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TestName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("HealthTestId");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("HealthTests");
-                });
-
-            modelBuilder.Entity("Domain.Entities.MedicalHistory", b =>
+            modelBuilder.Entity("Domain.Entities.Student", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -186,49 +160,25 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Allergies")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<DateTime>("DateOfEntry")
+                    b.Property<DateTime>("DoB")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FamilyMedicalHistory")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MedicalCondition")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.Property<string>("Faculty")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Medications")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.Property<string>("FatherName")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Surgeries")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("MedicalHistory");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Patient", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("EmailAddress")
+                    b.Property<string>("MotherName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -237,15 +187,15 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("PhoneNo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Roles")
+                    b.Property<string>("Semester")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patients");
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Domain.Entities.Teacher", b =>
@@ -353,45 +303,26 @@ namespace Infrastructure.Migrations
                     b.ToTable("UploadFileMorph");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Appointment", b =>
+            modelBuilder.Entity("Domain.Entities.Academics", b =>
                 {
-                    b.HasOne("Domain.Entities.Doctor", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId")
+                    b.HasOne("Domain.Entities.Student", "Student")
+                        .WithOne("Academics")
+                        .HasForeignKey("Domain.Entities.Academics", "StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Patient");
+                    b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Domain.Entities.HealthTest", b =>
+            modelBuilder.Entity("Domain.Entities.Certification", b =>
                 {
-                    b.HasOne("Domain.Entities.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
+                    b.HasOne("Domain.Entities.Student", "Student")
+                        .WithMany("Certifications")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("Domain.Entities.MedicalHistory", b =>
-                {
-                    b.HasOne("Domain.Entities.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Patient");
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Domain.Entities.UploadFileMorph", b =>
@@ -403,6 +334,13 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("UploadFile");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Student", b =>
+                {
+                    b.Navigation("Academics");
+
+                    b.Navigation("Certifications");
                 });
 
             modelBuilder.Entity("Domain.Entities.UploadFile", b =>

@@ -22,6 +22,43 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Domain.Entities.Academics", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Ended")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("GPA")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("Joined")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Scholarship")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Section")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Semester")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId")
+                        .IsUnique();
+
+                    b.ToTable("Academics");
+                });
+
             modelBuilder.Entity("Domain.Entities.Certification", b =>
                 {
                     b.Property<int>("Id")
@@ -36,10 +73,15 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ReceivedDate")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
 
                     b.ToTable("Certifications");
                 });
@@ -106,6 +148,52 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ExtracurricularActivities");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Student", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("DoB")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Faculty")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FatherName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MotherName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Semester")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Domain.Entities.Teacher", b =>
@@ -213,6 +301,28 @@ namespace Infrastructure.Migrations
                     b.ToTable("UploadFileMorph");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Academics", b =>
+                {
+                    b.HasOne("Domain.Entities.Student", "Student")
+                        .WithOne("Academics")
+                        .HasForeignKey("Domain.Entities.Academics", "StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Certification", b =>
+                {
+                    b.HasOne("Domain.Entities.Student", "Student")
+                        .WithMany("Certifications")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("Domain.Entities.UploadFileMorph", b =>
                 {
                     b.HasOne("Domain.Entities.UploadFile", "UploadFile")
@@ -222,6 +332,13 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("UploadFile");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Student", b =>
+                {
+                    b.Navigation("Academics");
+
+                    b.Navigation("Certifications");
                 });
 
             modelBuilder.Entity("Domain.Entities.UploadFile", b =>

@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Infrastructure.Migrations
 {
-    public partial class init1 : Migration
+    public partial class init13 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,35 +28,43 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Doctors",
+                name: "ExtracurricularActivities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Specialty = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Position = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Skill = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    ClubName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Doctors", x => x.Id);
+                    table.PrimaryKey("PK_ExtracurricularActivities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Patients",
+                name: "Students",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FatherName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MotherName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DoB = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Roles = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Faculty = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Semester = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Patients", x => x.Id);
+                    table.PrimaryKey("PK_Students", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,7 +80,8 @@ namespace Infrastructure.Migrations
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DOB = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Phonenumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Phonenumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -98,79 +108,48 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Appointments",
+                name: "Academics",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DoctorId = table.Column<int>(type: "int", nullable: false),
-                    PatientId = table.Column<int>(type: "int", nullable: false),
-                    AppointmentDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TimeStart = table.Column<TimeSpan>(type: "time", nullable: false),
-                    TimeEnd = table.Column<TimeSpan>(type: "time", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
+                    Section = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GPA = table.Column<double>(type: "float", nullable: false),
+                    Joined = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Ended = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Semester = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Scholarship = table.Column<double>(type: "float", nullable: false),
+                    StudentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Appointments", x => x.Id);
+                    table.PrimaryKey("PK_Academics", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Appointments_Doctors_DoctorId",
-                        column: x => x.DoctorId,
-                        principalTable: "Doctors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Appointments_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
+                        name: "FK_Academics_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "HealthTests",
-                columns: table => new
-                {
-                    HealthTestId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TestName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    RequestedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PatientId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HealthTests", x => x.HealthTestId);
-                    table.ForeignKey(
-                        name: "FK_HealthTests_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MedicalHistory",
+                name: "Certifications",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PatientId = table.Column<int>(type: "int", nullable: false),
-                    DateOfEntry = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MedicalCondition = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Medications = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Allergies = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Surgeries = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    FamilyMedicalHistory = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReceivedDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StudentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MedicalHistory", x => x.Id);
+                    table.PrimaryKey("PK_Certifications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MedicalHistory_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
+                        name: "FK_Certifications_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -198,24 +177,15 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointments_DoctorId",
-                table: "Appointments",
-                column: "DoctorId");
+                name: "IX_Academics_StudentId",
+                table: "Academics",
+                column: "StudentId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointments_PatientId",
-                table: "Appointments",
-                column: "PatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_HealthTests_PatientId",
-                table: "HealthTests",
-                column: "PatientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MedicalHistory_PatientId",
-                table: "MedicalHistory",
-                column: "PatientId");
+                name: "IX_Certifications_StudentId",
+                table: "Certifications",
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UploadFileMorph_UploadFileId",
@@ -226,16 +196,16 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Appointments");
+                name: "Academics");
+
+            migrationBuilder.DropTable(
+                name: "Certifications");
 
             migrationBuilder.DropTable(
                 name: "CustomerMessages");
 
             migrationBuilder.DropTable(
-                name: "HealthTests");
-
-            migrationBuilder.DropTable(
-                name: "MedicalHistory");
+                name: "ExtracurricularActivities");
 
             migrationBuilder.DropTable(
                 name: "Teachers");
@@ -244,10 +214,7 @@ namespace Infrastructure.Migrations
                 name: "UploadFileMorph");
 
             migrationBuilder.DropTable(
-                name: "Doctors");
-
-            migrationBuilder.DropTable(
-                name: "Patients");
+                name: "Students");
 
             migrationBuilder.DropTable(
                 name: "UploadFile");
