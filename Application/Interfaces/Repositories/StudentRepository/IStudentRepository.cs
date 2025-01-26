@@ -6,5 +6,3 @@ namespace Application.Interfaces.Repositories.StudentRepository
     {
     }
 }
-
-

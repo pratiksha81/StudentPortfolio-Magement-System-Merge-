@@ -1,34 +1,30 @@
 ﻿using API;
 using Application.Dto.Student;
-
 using Application.Features.Student.Command;
 using Application.Features.Student.Query;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StudentPortfolio_Management_System.API
 {
-
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class StudentController : BaseApiController
     {
-        private readonly IValidator<AddStudentDto> _validator;
+        //private readonly IValidator<AddStudentDto> _validator;
 
-        public StudentController(IValidator<AddStudentDto> validator)
-        {
-            _validator = validator;
-        }
+        //public StudentController(IValidator<AddStudentDto> validator)
+        //{
+        //    _validator = validator;
+        //}
 
         [HttpGet]
         public async Task<ActionResult> GetAllStudents(
-                    [FromQuery] string faculty = null,
-                    [FromQuery] string semester = null,
-                    [FromQuery] string name = null,
-                    [FromQuery] int pageNumber = 1,
-                    [FromQuery] int pageSize = 5)
+             [FromQuery] string faculty = null,
+             [FromQuery] string semester = null,
+             [FromQuery] string name = null,
+             [FromQuery] int pageNumber = 1,
+             [FromQuery] int pageSize = 0)
         {
             var result = await Mediator.Send(new GetAllStudentsQuery
             {
@@ -45,7 +41,7 @@ namespace StudentPortfolio_Management_System.API
             return Ok(new
             {
                 TotalCount = totalCount,
-                Students = students
+                Data = students
             });
         }
 
@@ -54,12 +50,15 @@ namespace StudentPortfolio_Management_System.API
         [HttpPost]
         public async Task<IActionResult> AddStudent(AddStudentDto studentDto)
         {
-            var validationResult = await _validator.ValidateAsync(studentDto);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }
+            // Validate the studentDto
+            //var validationResult = await _validator.ValidateAsync(studentDto);
+            //if (!validationResult.IsValid)
+            //{
+            //    // Return BadRequest if validation fails
+            //    return BadRequest(validationResult.Errors);
+            //}
 
+            // If validation passes, proceed with adding the student
             var studentId = await Mediator.Send(new AddStudentCommand { Student = studentDto });
             return Ok(studentId);
         }
@@ -84,7 +83,5 @@ namespace StudentPortfolio_Management_System.API
             var result = await Mediator.Send(new DeleteStudentCommand { Id = id });
             return result ? Ok(result) : NotFound();
         }
-
-       
     }
 }

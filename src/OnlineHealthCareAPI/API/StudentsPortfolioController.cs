@@ -1,12 +1,16 @@
-﻿using Application.Dto.StudentPortfolio;
+﻿using API;
+using Application.Dto.StudentPortfolio;
+using Application.Features.Certification.Query;
+using Application.Features.StudentPortfolio.Query;
 using Application.Interfaces.Services.StudentPortfolioService;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StudentPortfolio_Management_System.API
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class StudentsPortfolioController : ControllerBase
+    public class StudentsPortfolioController : BaseApiController
     {
         private readonly IStudentPortfolioService _studentPortfolioService;
 
@@ -15,17 +19,19 @@ namespace StudentPortfolio_Management_System.API
             _studentPortfolioService = studentPortfolioService;
         }
 
-        [HttpGet("{studentId}")]
-        public async Task<ActionResult<StudentPortfolioDto>> GetStudentPortfolio(int studentId)
+    
+        [HttpGet("by-student/{studentId}")]
+        public async Task<ActionResult<List<StudentPortfolioDto>>> GetStudentPortfolioByStudentId(int studentId)
         {
-            var studentPortfolio = await _studentPortfolioService.GetStudentPortfolioAsync(studentId);
+            var query = new StudentPortfolioByStudentIdListQuery { StudentId = studentId };
+            var studentPortfolios = await Mediator.Send(query);
 
-            if (studentPortfolio == null)
+            if (studentPortfolios == null || !studentPortfolios.Any())
             {
-                return NotFound();
+                return NotFound("No portfolios found for the specified student.");
             }
 
-            return Ok(studentPortfolio);
+            return Ok(studentPortfolios);
         }
     }
 }

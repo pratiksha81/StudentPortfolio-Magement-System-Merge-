@@ -2,7 +2,7 @@
 using Application.Interfaces.Repositories.TeacherRepository;
 using FluentValidation;
 
-public class TeacherValidator : AbstractValidator<AddTeacherDto>  
+public class TeacherValidator : AbstractValidator<AddTeacherDto>  // Validate AddTeacherDto
 {
     private readonly ITeacherRepository _teacherRepository;
 
@@ -22,7 +22,7 @@ public class TeacherValidator : AbstractValidator<AddTeacherDto>
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required")
             .EmailAddress().WithMessage("Invalid email address")
-            .MustAsync(async (model, email, cancellation) => await IsEmailUniqueAsync(model.Id, email))
+            //.MustAsync(async (model, email, cancellation) => await IsEmailUniqueAsync(model.Id, email))
             .WithMessage("Email already exists");
 
         RuleFor(x => x.Password)
@@ -43,7 +43,7 @@ public class TeacherValidator : AbstractValidator<AddTeacherDto>
             .NotEmpty().WithMessage("Phone Number is required")
             .Length(10).WithMessage("Phone Number should be exactly 10 digits")
             .Matches(@"^9[78]\d{8}$").WithMessage("Invalid phone format")
-            .MustAsync(async (model, phone, cancellation) => await IsPhoneUniqueAsync(model.Id, phone))
+            // .MustAsync(async (model, phone, cancellation) => await IsPhoneUniqueAsync(model.Id, phone))
             .WithMessage("Phone number already exists");
     }
 

@@ -1,6 +1,8 @@
 ﻿using Application.Dto.Teacher;
 using Application.Interfaces.Services.TeacherService;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Features.Teacher.Query
 {
@@ -20,7 +22,7 @@ namespace Application.Features.Teacher.Query
 
         public async Task<TeacherDto> Handle(GetTeacherByIdQuery request, CancellationToken cancellationToken)
         {
-            var response = await _teacherService.GetTeacherDetails(request.Id);
+            var response = await _teacherService.GetTeacherById(request.Id);
             return response;
         }
     }

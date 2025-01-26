@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Dto.Student;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,6 @@ namespace Application.Dto.StudentPortfolio
     {
         public List<Domain.Entities.Certification> Certifications { get; set; }
         public Domain.Entities.Academics Academics { get; set; }
-
         public List<ExtracurricularActivities> ExtracurricularActivities { get; set; }
     }
 }

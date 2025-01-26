@@ -1,6 +1,7 @@
 ﻿using Application.Dto.Academics;
 using Application.Dto.Student;
 using Application.Interfaces.Repositories.AcademicsRepository;
+using Application.Interfaces.Repositories.StudentRepository;
 using Application.Interfaces.Services.AcademicsService;
 using Application.Interfaces.Services.StudentService;
 using Domain.Entities;

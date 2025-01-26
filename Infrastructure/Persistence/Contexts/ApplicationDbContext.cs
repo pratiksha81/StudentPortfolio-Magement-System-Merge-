@@ -27,6 +27,11 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<ExtracurricularActivities> ExtracurricularActivities { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Academics> Academics { get; set; }
+        public DbSet<AdminProfile> AdminProfile { get; set; }
+        public DbSet<Notice> Notice { get; set; }
+        public DbSet<Project> Project { get; set; }
+        public DbSet<Portfolio> Portfolio { get; set; }
+
 
 
 
@@ -99,6 +104,12 @@ namespace Infrastructure.Persistence.Contexts
        .WithOne(c => c.Student)
        .HasForeignKey(c => c.StudentId) // This defines the foreign key
        .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Portfolio>()
+           .HasOne(p => p.Student) // A portfolio has one student
+           .WithOne(s => s.Portfolios) // A student has one portfolio
+           .HasForeignKey<Portfolio>(p => p.StudentId) // Set the foreign key in the Portfolio entity
+           .OnDelete(DeleteBehavior.Cascade); // Specify the delete behavior (optional)
 
 
 
