@@ -16,5 +16,11 @@ namespace Domain.Entities
         public int Year { get; set; }
         public string ClubName { get; set; }
         public string ImageUrl { get; set; }
+
+        // Foreign key property
+        public int StudentId { get; set; } // Ensure this exists only once
+
+        // Navigation property
+        public Student Student { get; set; }
     }
 }

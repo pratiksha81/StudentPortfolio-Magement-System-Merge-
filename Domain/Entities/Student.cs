@@ -17,6 +17,7 @@
 
         // Navigation property
         public Academics Academics { get; set; }//ONE TO ONE 
+        public ICollection<ExtracurricularActivities> ExtracurricularActivities { get; set; }
 
         public ICollection<Certification> Certifications { get; set; } //One to Many
     }

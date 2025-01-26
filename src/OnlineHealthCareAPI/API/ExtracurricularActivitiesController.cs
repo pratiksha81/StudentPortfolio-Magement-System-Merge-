@@ -1,4 +1,5 @@
 ﻿using API;
+using Application.Features.Certification.Query;
 using Application.Features.ExtracurricularActivities.Command;
 using Application.Features.ExtracurricularActivities.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,22 @@ namespace StudentPortfolio_Management_System.API
             }
         }
 
+        [HttpGet("student/{studentId}/ExtracurricularActivities")]
+        public async Task<IActionResult> GetExtracurricularActivitiesByStudentId(int studentId)
+        {
+            try
+            {
+                
+                var extracurricularActivities = await Mediator.Send(new ExtracurricularActivitiesByStudentIdListQuery { StudentId = studentId });
+
+                return Ok(extracurricularActivities);
+            }
+            catch (Exception ex)
+            {
+                
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal Server Error");
+            }
+        }
 
 
     }

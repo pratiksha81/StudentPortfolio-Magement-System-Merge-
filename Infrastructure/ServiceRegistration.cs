@@ -13,6 +13,7 @@ using Application.Interfaces.Services.CertificationService;
 using Application.Interfaces.Services.CustomerMessageService;
 using Application.Interfaces.Services.EmailSenderService;
 using Application.Interfaces.Services.ExtracurricularActivitiesService;
+using Application.Interfaces.Services.StudentPortfolioService;
 using Application.Interfaces.Services.StudentService;
 using Application.Interfaces.Services.TeacherService;
 using Application.Interfaces.Services.UploadFileService;
@@ -31,6 +32,7 @@ using Infrastructure.Persistence.Services.CertificationService;
 using Infrastructure.Persistence.Services.CustomerMessageService;
 using Infrastructure.Persistence.Services.EmailSenderService;
 using Infrastructure.Persistence.Services.IpHelperService;
+using Infrastructure.Persistence.Services.StudentPortfolioService;
 using Infrastructure.Persistence.Services.StudentService;
 using Infrastructure.Persistence.Services.TeacherService;
 using Infrastructure.Persistence.Services.UploadFileService;
@@ -68,8 +70,10 @@ namespace Infrastructure
             services.AddTransient<IExtracurricularActivitiesService, ExtracurricularActivitiesService>();
             services.AddTransient<IStudentService, StudentService>();
             services.AddTransient<IAcademicsService, AcademicsService>();
+            services.AddScoped<IStudentPortfolioService, StudentPortfolioService>();
 
             services.AddTransient(typeof(Repository<>), typeof(Repository<>));
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<ICertificationRepository, CertificationRepository>();
             services.AddTransient<IUploadFileRepository, UploadFileRepository>();
             services.AddTransient<IUploadFileMorphRepository, UploadFileMorphRepository>();

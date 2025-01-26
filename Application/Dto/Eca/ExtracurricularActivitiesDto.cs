@@ -8,5 +8,6 @@
         public int Year { get; set; }
         public string ClubName { get; set; }
         public string ImageUrl { get; set; }
+        public int StudentId { get; set; }
     }
 }

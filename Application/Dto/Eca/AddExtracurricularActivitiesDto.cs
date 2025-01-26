@@ -8,6 +8,7 @@ namespace Application.Dto.ECA
         public string Skill { get; set; }
         public int Year { get; set; }
         public string ClubName { get; set; }
+        public int StudentId { get; set; }
         public List<IFormFile> Images { get; set; }
     }
 }

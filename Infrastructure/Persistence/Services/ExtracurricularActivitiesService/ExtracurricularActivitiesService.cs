@@ -1,6 +1,8 @@
-﻿using Application.Dto.ECA;
+﻿using Application.Dto.Certification;
+using Application.Dto.ECA;
 using Application.Interfaces.Repositories.ExtracurricularActivitiesRepository;
 using Application.Interfaces.Services.ExtracurricularActivitiesService;
+using Domain.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -67,7 +69,9 @@ public class ExtracurricularActivitiesService : IExtracurricularActivitiesServic
             Skill = request.Skill,
             Year = request.Year,
             ClubName = request.ClubName,
-            ImageUrl = string.Join(";", imageUrls)
+            ImageUrl = string.Join(";", imageUrls),
+            StudentId = request.StudentId,
+
         };
 
         // Save to the repository
@@ -81,7 +85,8 @@ public class ExtracurricularActivitiesService : IExtracurricularActivitiesServic
             Skill = extracurricularActivity.Skill,
             Year = extracurricularActivity.Year,
             ClubName = extracurricularActivity.ClubName,
-            Images = request.Images
+            Images = request.Images,
+            StudentId = request.StudentId
         };
     }
 
@@ -97,10 +102,35 @@ public class ExtracurricularActivitiesService : IExtracurricularActivitiesServic
             Skill = a.Skill,
             Year = a.Year,
             ClubName = a.ClubName,
-            ImageUrl = a.ImageUrl
+            ImageUrl = a.ImageUrl,
+             StudentId = a.StudentId
         }).ToList();
 
         _logger.LogInformation($"{nameof(GetAllExtracurricularActivitiesAsync)} method returned activities: {JsonConvert.SerializeObject(activitiesDtos)}");
         return activitiesDtos;
+    }
+
+    public async Task<List<ExtracurricularActivitiesDto>> GetExtracurricularActivitiesByStudentIdAsync(int studentId)
+    {
+        _logger.LogInformation($"{nameof(GetExtracurricularActivitiesByStudentIdAsync)} method triggered for StudentId: {studentId}");
+
+        var ecas = await _ecaRepository.Queryable
+            .Where(c => c.StudentId == studentId)
+            .ToListAsync();
+
+        var extracurricularActivitiesDto = ecas.Select(a => new ExtracurricularActivitiesDto
+        {
+            Id = a.Id,
+            Position = a.Position,
+            Skill = a.Skill,
+            Year = a.Year,
+            ClubName = a.ClubName,
+            ImageUrl = a.ImageUrl,
+            StudentId = a.StudentId
+        }).ToList();
+
+        _logger.LogInformation($"{nameof(GetExtracurricularActivitiesByStudentIdAsync)} method returned certifications: {JsonConvert.SerializeObject(extracurricularActivitiesDto)}");
+        return extracurricularActivitiesDto;
+       // throw new NotImplementedException();
     }
 }

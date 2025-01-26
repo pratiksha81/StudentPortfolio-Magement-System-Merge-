@@ -32,6 +32,7 @@ namespace Infrastructure.Persistence.Contexts
 
 
 
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             foreach (var entry in ChangeTracker.Entries<BaseAuditableEntity>())
@@ -92,6 +93,12 @@ namespace Infrastructure.Persistence.Contexts
         .WithOne(c => c.Student)
         .HasForeignKey(c => c.StudentId) // This defines the foreign key
         .OnDelete(DeleteBehavior.Cascade); // Optional cascade delete
+
+            builder.Entity<Student>()
+       .HasMany(s => s.ExtracurricularActivities)
+       .WithOne(c => c.Student)
+       .HasForeignKey(c => c.StudentId) // This defines the foreign key
+       .OnDelete(DeleteBehavior.Cascade);
 
 
 
