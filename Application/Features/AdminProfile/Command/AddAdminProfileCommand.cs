@@ -5,12 +5,12 @@ using MediatR;
 
 namespace Application.Features.AdminProfile.Command
 {
-    public class AddAdminProfileCommand : IRequest<int>
+    public class AddAdminProfileCommand : IRequest<AddAdminProfileDto>
     {
         public AddAdminProfileDto AdminProfile { get; set; }
     }
 
-    public class AddAdminProfileCommandHandler : IRequestHandler<AddAdminProfileCommand, int>
+    public class AddAdminProfileCommandHandler : IRequestHandler<AddAdminProfileCommand, AddAdminProfileDto>
     {
         private readonly IAdminProfileService _adminProfileService;
 
@@ -19,7 +19,7 @@ namespace Application.Features.AdminProfile.Command
             _adminProfileService = adminProfileService;
         }
 
-        public async Task<int> Handle(AddAdminProfileCommand request, CancellationToken cancellationToken)
+        public async Task<AddAdminProfileDto> Handle(AddAdminProfileCommand request, CancellationToken cancellationToken)
         {
             var adminProfileId = await _adminProfileService.AddAdminProfileAsync(request.AdminProfile);
             return adminProfileId;

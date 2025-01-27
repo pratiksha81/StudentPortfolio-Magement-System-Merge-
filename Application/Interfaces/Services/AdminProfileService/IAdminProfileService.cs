@@ -14,7 +14,7 @@ namespace Application.Interfaces
 
         Task<AdminProfileDto> GetAdminProfileByIdAsync(int id);
 
-        Task<int> AddAdminProfileAsync(AddAdminProfileDto adminProfileDto);
+        Task<AddAdminProfileDto> AddAdminProfileAsync(AddAdminProfileDto adminProfileDto);
 
         Task<bool> UpdateAdminProfileAsync(UpdateAdminProfileDto adminProfileDto);
 

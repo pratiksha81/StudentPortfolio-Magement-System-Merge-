@@ -1,4 +1,5 @@
-﻿using Application.Dto.Teacher;
+﻿using Application.Dto.Student;
+using Application.Dto.Teacher;
 using Application.Interfaces.Repositories.TeacherRepository;
 using Application.Interfaces.Services.TeacherService;
 using Domain.Entities;
@@ -22,7 +23,7 @@ namespace Infrastructure.Persistence.Services.TeacherService
         }
 
 
-        public async Task<(IQueryable<TeacherDto>teachers, int totalcount)> GetAllTeachersAsync(string qualification = null, string experience = null, int pageNumber = 1, int pageSize = 5)
+        public async Task<(IQueryable<TeacherDto> teachers, int totalcount)> GetAllTeachersAsync(string qualification = null, string experience = null, int pageNumber = 1, int pageSize = 5)
         {
             var teachersQuery = _teacherRepository.GetQueryable();
 
@@ -64,45 +65,7 @@ namespace Infrastructure.Persistence.Services.TeacherService
         }
         public async Task<AddTeacherDto> RegisterTeacher(AddTeacherDto teacherDto)
         {
-            // List to hold the image URLs after validation and saving
-            var imageUrls = new List<string>();
-
-            if (teacherDto.Images != null && teacherDto.Images.Any())
-            {
-                foreach (var image in teacherDto.Images)
-                {
-                    // Image validation
-                    if (image.Length > 2 * 1024 * 1024)  // Check if image size exceeds 2 MB
-                    {
-                        throw new Exception("Image size exceeds 2 MB.");
-                    }
-
-                    var extension = Path.GetExtension(image.FileName);  // Get file extension
-                    if (!new[] { ".jpg", ".jpeg", ".png" }.Contains(extension.ToLower()))  // Check if format is allowed
-                    {
-                        throw new Exception("Supported formats are .jpg, .jpeg, and .png.");
-                    }
-
-                    // Save the image in the "uploads" directory
-                    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
-                    var fileName = Guid.NewGuid() + extension;  // Create a unique file name
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(stream);  // Save the image
-                    }
-
-                    // Add the image URL (relative to the web root) to the list
-                    imageUrls.Add(Path.Combine("uploads", fileName));
-                }
-            }
-
+            var imageUrls = await SaveStudentImagesAsync(teacherDto.Images);
             // Save teacher details
             var teacher = new Teacher
             {
@@ -121,12 +84,12 @@ namespace Infrastructure.Persistence.Services.TeacherService
             await _teacherRepository.SaveChangesAsync();
 
             // Return the DTO with the teacher's data and the image URLs
-           // teacherDto.Id = teacher.Id;
+            // teacherDto.Id = teacher.Id;
             //teacherDto.ImageUrl = teacher.ImageUrl;
 
             return teacherDto;
         }
-   
+
         public async Task<TeacherDto> GetTeacherById(int teacherId)
         {
             var teacher = await _teacherRepository.FirstOrDefaultAsync(t => t.Id == teacherId);
@@ -167,7 +130,7 @@ namespace Infrastructure.Persistence.Services.TeacherService
             teacher.DOB = teacherDto.DOB ?? teacher.DOB;
             teacher.Gender = teacherDto.Gender ?? teacher.Gender;
             teacher.Phonenumber = teacherDto.Phonenumber ?? teacher.Phonenumber;
-           // teacher.ImageUrl = teacherDto.ImageUrl ?? teacher.ImageUrl;
+            // teacher.ImageUrl = teacherDto.ImageUrl ?? teacher.ImageUrl;
 
             await _teacherRepository.UpdateAsync(teacher);
             await _teacherRepository.SaveChangesAsync();
@@ -201,6 +164,42 @@ namespace Infrastructure.Persistence.Services.TeacherService
             return true;
         }
 
+
+        private async Task<List<string>> SaveStudentImagesAsync(IEnumerable<IFormFile> images)
+        {
+            var imageUrls = new List<string>();
+
+            if (images != null && images.Any())
+            {
+                foreach (var image in images)
+                {
+                    // Validate image size and format
+                    var extension = Path.GetExtension(image.FileName).ToLower();
+                    if (image.Length > 2 * 1024 * 1024 || !new[] { ".jpg", ".jpeg", ".png" }.Contains(extension))
+                    {
+                        throw new Exception("Invalid image file. Supported formats are .jpg, .jpeg, and .png, and the size must not exceed 2 MB.");
+                    }
+
+                    // Define the upload folder
+                    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                    Directory.CreateDirectory(uploadsFolder);
+
+                    // Save the file with a unique name
+                    var fileName = $"{Guid.NewGuid()}{extension}";
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+
+                    // Add the saved file's relative URL
+                    imageUrls.Add(Path.Combine("uploads", fileName));
+                }
+            }
+
+            return imageUrls;
+        }
 
 
         private string HashPassword(string password)

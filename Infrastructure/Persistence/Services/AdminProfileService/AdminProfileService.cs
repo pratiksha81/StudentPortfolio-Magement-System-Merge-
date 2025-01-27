@@ -1,10 +1,9 @@
 ﻿using Application.Dto.AdminProfile;
-using Application.Dto.Student;
 using Application.Interfaces;
 using Application.Interfaces.Repositories.AdminProfileRepository;
-//using Application.Interfaces.Services.AdminProfileService;
-using Domain.Entities;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System.Linq;
 
 namespace Infrastructure.Persistence.Services.AdminProfileService
 {
@@ -56,46 +55,9 @@ namespace Infrastructure.Persistence.Services.AdminProfileService
             return (adminProfileDtos, totalCount);
         }
 
-        public async Task<int> AddAdminProfileAsync(AddAdminProfileDto adminProfileDto)
+        public async Task<AddAdminProfileDto> AddAdminProfileAsync(AddAdminProfileDto adminProfileDto)
         {
-            // List to hold the image URLs after validation and saving
-            var imageUrls = new List<string>();
-
-            if (adminProfileDto.Image != null && adminProfileDto.Image.Any())
-            {
-                foreach (var image in adminProfileDto.Image)
-                {
-                    // Image validation
-                    if (image.Length > 2 * 1024 * 1024)  // Check if image size exceeds 2 MB
-                    {
-                        throw new Exception("Image size exceeds 2 MB.");
-                    }
-
-                    var extension = Path.GetExtension(image.FileName);  // Get file extension
-                    if (!new[] { ".jpg", ".jpeg", ".png" }.Contains(extension.ToLower()))  // Check if format is allowed
-                    {
-                        throw new Exception("Supported formats are .jpg, .jpeg, and .png.");
-                    }
-
-                    // Save the image in the "uploads" directory
-                    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
-                    var fileName = Guid.NewGuid() + extension;  // Create a unique file name
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(stream);  // Save the image
-                    }
-
-                    // Add the image URL (relative to the web root) to the list
-                    imageUrls.Add(Path.Combine("uploads", fileName));
-                }
-            }
+            var imageUrls = await HandleImagesAsync(adminProfileDto.Image);
 
             var adminProfile = new AdminProfile
             {
@@ -108,10 +70,10 @@ namespace Infrastructure.Persistence.Services.AdminProfileService
                 ImageUrl = string.Join(";", imageUrls)
             };
 
-            var addedAdminProfile = await _adminProfileRepository.AddAsync(adminProfile);
+            await _adminProfileRepository.AddAsync(adminProfile);
             await _adminProfileRepository.SaveChangesAsync();
 
-            return addedAdminProfile.Id;
+            return adminProfileDto;
         }
 
         public async Task<AdminProfileDto> GetAdminProfileByIdAsync(int id)
@@ -134,48 +96,10 @@ namespace Infrastructure.Persistence.Services.AdminProfileService
 
         public async Task<bool> UpdateAdminProfileAsync(UpdateAdminProfileDto adminProfileDto)
         {
-
-            // List to hold the image URLs after validation and saving
-            var imageUrls = new List<string>();
-
-            if (adminProfileDto.Image != null && adminProfileDto.Image.Any())
-            {
-                foreach (var image in adminProfileDto.Image)
-                {
-                    // Image validation
-                    if (image.Length > 2 * 1024 * 1024)  // Check if image size exceeds 2 MB
-                    {
-                        throw new Exception("Image size exceeds 2 MB.");
-                    }
-
-                    var extension = Path.GetExtension(image.FileName);  // Get file extension
-                    if (!new[] { ".jpg", ".jpeg", ".png" }.Contains(extension.ToLower()))  // Check if format is allowed
-                    {
-                        throw new Exception("Supported formats are .jpg, .jpeg, and .png.");
-                    }
-
-                    // Save the image in the "uploads" directory
-                    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
-                    var fileName = Guid.NewGuid() + extension;  // Create a unique file name
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(stream);  // Save the image
-                    }
-
-                    // Add the image URL (relative to the web root) to the list
-                    imageUrls.Add(Path.Combine("uploads", fileName));
-                }
-            }
-
             var adminProfile = await _adminProfileRepository.FirstOrDefaultAsync(x => x.Id == adminProfileDto.Id);
             if (adminProfile == null) return false;
+
+            var imageUrls = await HandleImagesAsync(adminProfileDto.Image);
 
             adminProfile.FirstName = adminProfileDto.FirstName;
             adminProfile.LastName = adminProfileDto.LastName;
@@ -200,6 +124,40 @@ namespace Infrastructure.Persistence.Services.AdminProfileService
             await _adminProfileRepository.SaveChangesAsync();
 
             return true;
+        }
+
+        private async Task<List<string>> HandleImagesAsync(IEnumerable<IFormFile> images)
+        {
+            var imageUrls = new List<string>();
+
+            if (images != null && images.Any())
+            {
+                foreach (var image in images)
+                {
+                    // Validate image size and format
+                    if (image.Length > 2 * 1024 * 1024) throw new Exception("Image size exceeds 2 MB.");
+                    var extension = Path.GetExtension(image.FileName).ToLower();
+                    if (!new[] { ".jpg", ".jpeg", ".png" }.Contains(extension)) throw new Exception("Supported formats are .jpg, .jpeg, and .png.");
+
+                    // Define the upload folder
+                    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                    if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+                    // Save the image with a unique name
+                    var fileName = $"{Guid.NewGuid()}{extension}";
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+
+                    // Add relative URL
+                    imageUrls.Add(Path.Combine("uploads", fileName));
+                }
+            }
+
+            return imageUrls;
         }
     }
 }

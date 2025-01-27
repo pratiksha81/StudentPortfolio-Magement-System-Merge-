@@ -47,7 +47,7 @@ namespace StudentPortfolio_Management_System.API
 
 
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> AddStudent(AddStudentDto studentDto)
         {
             // Validate the studentDto

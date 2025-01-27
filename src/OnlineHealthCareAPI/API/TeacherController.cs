@@ -1,4 +1,6 @@
-﻿using Application.Dto.Teacher;
+﻿using Application.Dto.Student;
+using Application.Dto.Teacher;
+using Application.Features.Student.Command;
 using Application.Features.Teacher.Command;
 using Application.Features.Teacher.Query;
 using Application.Wrapper;
@@ -37,13 +39,13 @@ namespace API
 
             return Ok(new
             {
-               TotalCount= totalcount,
-               Data = teacher
+                TotalCount = totalcount,
+                Data = teacher
             });
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] TeacherRegistrationCommand command)
+        public async Task<IActionResult> Register([FromForm] AddTeacherDto teach)
         {
             try
             {
@@ -53,8 +55,9 @@ namespace API
                 //    return BadRequest(validationResult.Errors);
                 //}
 
-                var response = await Mediator.Send(command);
 
+
+                var response = await Mediator.Send(new TeacherRegistrationCommand { AddTeacherDto = teach });
                 return Ok(response);
             }
             catch (Exception ex)

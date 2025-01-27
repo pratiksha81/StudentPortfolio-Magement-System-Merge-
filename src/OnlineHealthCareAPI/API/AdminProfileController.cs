@@ -43,7 +43,7 @@ namespace YourNamespace.API
             });
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> AddAdminProfile([FromForm] AddAdminProfileDto adminProfileDto)
         {
             //var validationResult = await _validator.ValidateAsync(adminProfileDto);

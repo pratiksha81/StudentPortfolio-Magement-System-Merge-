@@ -33,7 +33,7 @@ namespace StudentPortfolio_Management_System.API
             return Ok(notices);
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> AddNotice(AddNoticeDto noticeDto)
         {
             var validationResult = await _validator.ValidateAsync(noticeDto);
