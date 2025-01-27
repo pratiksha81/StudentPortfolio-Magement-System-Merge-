@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StudentPortfolio_Management_System.API
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class NoticeController : BaseApiController
     {
