@@ -45,7 +45,7 @@ namespace API
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] AddTeacherDto teach)
+        public async Task<IActionResult> Register([FromBody] AddTeacherDto teach)
         {
             try
             {

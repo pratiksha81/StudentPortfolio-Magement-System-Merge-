@@ -63,10 +63,10 @@ namespace YourNamespace.API
             return adminProfileDto != null ? Ok(adminProfileDto) : NotFound();
         }
 
-        [HttpPut("Update/{id}")]
-        public async Task<IActionResult> UpdateAdminProfile(int id,[FromForm] UpdateAdminProfileDto adminProfileDto)
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateAdminProfile( [FromForm] UpdateAdminProfileDto adminProfileDto)
         {
-            var result = await Mediator.Send(adminProfileDto);
+            var result = await Mediator.Send(new UpdateAdminProfileCommand { AdminProfile = adminProfileDto });
             return Ok(result);
         }
 
